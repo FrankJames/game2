@@ -2,6 +2,10 @@ import javalib.worldimages.*;
 import javalib.funworld.*;
 import javalib.colors.*;
 
+import java.io.*;
+import java.util.*;
+
+
 /*
 	NOTES FOR GAME2:
 	working title: Hero Dude who has some bombs hidden up his sleeve
@@ -38,25 +42,62 @@ class OverWorld extends World {
 	int width;
 	int height;
 	Hero hero;
+	LinkedList<Bomb> bombList;
+	LinkedList<Explosion> explosionList;
 
-	public OverWorld(int width, int height, Hero hero) {
+	public OverWorld(int width, int height, Hero hero, LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
+		this.bombList = bombList;
+		this.explosionList = explosionList;
 	}
 
-	public OverWorld(Hero hero) {
+	public OverWorld( Hero hero, LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList  ) {
 		this.width = 800;
 		this.height = 500;
 		this.hero = hero;
+		this.bombList = bombList;
+		this.explosionList = explosionList;
 	}
 
 	public World onKeyEvent( String ke ) {
-		return new OverWorld( hero.heroMove( ke ) );
+		if ( (ke.equals("up") )
+			|| (ke.equals("right") )
+			|| (ke.equals("left") )
+			|| (ke.equals("down") ) ) {
+			return new OverWorld( hero.heroMove( ke ), bombList, explosionList );
+		} else if (ke.equals("z") ) {
+			return new OverWorld( hero, bombList.add( new Bomb( hero.pin ) ), explosionList );
+		}
+		else {
+			return this;
+		}
 	}
 
 	public World onTick( ) {
-		return new OverWorld( hero );
+
+		Iterator<Bomb> i  = bombList.listIterator(0);
+		Iterator<Explosion> j  = explosionList.listIterator(0);
+
+		while( i.hasNext( ) ) {
+			i.next( ).bombTimeInc( );
+		}
+
+		i = bombList.listIterator(0);
+
+		while( i.hasNext( ) ) {
+			if ( i.next( ).timer > 20 ) {
+				
+			}
+
+		}
+
+		while( j.hasNext( ) ) {
+			j.next( ).explosionTimeInc( );
+		}
+
+		return new OverWorld( hero, bombList, explosionList );
 	}
 
 	WorldImage background = new OverlayImages(
@@ -64,14 +105,27 @@ class OverWorld extends World {
 		new RectangleImage(new Posn(100, 150), 50, 50, new Blue( ) ));  // completely unnecessary square
 
 	public WorldImage makeImage( ) {
+
+		Iterator<Bomb> i  = bombList.listIterator(0);
+		Iterator<Explosion> j  = explosionList.listIterator(0);
+
 		WorldImage world = new OverlayImages( background, hero.heroView( ) );
+
+		while( i.hasNext( ) ) {
+			world = new OverlayImages( world, i.next( ).bombView( ) );
+		}
+
+		while ( j.hasNext( ) ) {
+			world = new OverlayImages( world, j.next( ).explosionView( ) );
+		}
+
 		return world;
 	}
 
 	public static void main(String[ ] args ) {
 
 		Hero man = new Hero( new Posn( 50, 50 ), 2, 0, 3);
-		OverWorld w = new OverWorld( man );
+		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ) );
 
 		w.bigBang( 800, 500, 0.1);
 
