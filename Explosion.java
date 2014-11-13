@@ -8,6 +8,11 @@ class Explosion {
 	int timer;
 	Posn pin;
 
+	public Explosion( Posn pin ) {
+		this.timer = 0;
+		this.pin = pin;
+	}
+
 	public Explosion( int timer, Posn pin ) {
 		this.timer = timer;
 		this.pin = pin;
@@ -18,8 +23,9 @@ class Explosion {
 	}
 
 	public Explosion  explosionTimeInc( ) {
-		if ( timer < 20 ) {
-			return new Explosion( timer + 1, pin );
+		if ( timer < 5 ) {
+			this.timer++;
+			return this;
 		} else {  return null; }
 	}
 	

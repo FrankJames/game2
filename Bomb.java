@@ -11,7 +11,7 @@ class Bomb {
 	}
 
 	public Bomb( Posn pin ) {
-		this.timer = 30;
+		this.timer = 0;
 		this.pin = pin;
 	}
 
@@ -19,12 +19,13 @@ class Bomb {
 		return new RectangleImage( pin, 10, 10, new Blue( ) );
 	}
 
-	public Bomb  bombTimeInc( ) {
-		return new Bomb( timer + 1, pin );
+	public Bomb bombTimeInc( ) {
+		this.timer++;
+		return this;
 	}
 
-	public boolean goBoom( ) {
-		if (this.timer > 20) {
+	public boolean checkGoBoom( ) {
+		if (this.timer > 10) {
 			return true;
 		} else {
 			return false;

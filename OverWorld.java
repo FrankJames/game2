@@ -8,7 +8,7 @@ import java.util.*;
 
 /*
 	NOTES FOR GAME2:
-	working title: Hero Dude who has some bombs hidden up his sleeve
+	working title: Hero Dude who has some bombs hidden up his sleeve or in his back pocket or something
 
 
 The game itself will have:
@@ -20,7 +20,7 @@ The game itself will have:
 	6. non-destroyable background
 
 	On tick will need to:
-		1. checkGoBoom for each bomb
+		1. checkcheckGoBoom for each bomb
 		2. checkHitHero for each enemy
 		3. checkExplosion for hero/enemies/obstacles
 
@@ -37,7 +37,12 @@ obviously there will be different rooms, but what about an inventory? or a title
 
  */
 
+/*
+need to make it so that once a bomb's timer reaches the correct point, it is removed from the bombList and a corresponding explosion
+is added to the explosionList
 
+powerups could definitely be fields in the OverWorld, not in the Hero class
+ */ 
 class OverWorld extends World {
 	int width;
 	int height;
@@ -68,7 +73,9 @@ class OverWorld extends World {
 			|| (ke.equals("down") ) ) {
 			return new OverWorld( hero.heroMove( ke ), bombList, explosionList );
 		} else if (ke.equals("z") ) {
-			return new OverWorld( hero, bombList.add( new Bomb( hero.pin ) ), explosionList );
+			bombList.add( new Bomb( 0, hero.pin ) );
+
+			return new OverWorld( hero, bombList, explosionList );
 		}
 		else {
 			return this;
@@ -77,22 +84,25 @@ class OverWorld extends World {
 
 	public World onTick( ) {
 
-		Iterator<Bomb> i  = bombList.listIterator(0);
-		Iterator<Explosion> j  = explosionList.listIterator(0);
+		// check if each bomb should be removed from the bombList and added to explosionList
+		if( ( bombList.size( ) > 0 ) && ( bombList.element( ).checkGoBoom( ) ) ) {
 
+			explosionList.add( new Explosion( bombList.removeFirst( ).pin ) );
+		}
+
+		if( ( explosionList.size( ) > 0 ) && ( explosionList.element( ).timer >= 5 ) ) {
+			explosionList.removeFirst( );
+		}
+
+		Iterator<Bomb> i  = bombList.listIterator( 0 );
+		Iterator<Explosion> j  = explosionList.listIterator( 0 );
+
+		// increase each bomb's timer
 		while( i.hasNext( ) ) {
 			i.next( ).bombTimeInc( );
 		}
 
-		i = bombList.listIterator(0);
-
-		while( i.hasNext( ) ) {
-			if ( i.next( ).timer > 20 ) {
-				
-			}
-
-		}
-
+		// increase each explosion's timer
 		while( j.hasNext( ) ) {
 			j.next( ).explosionTimeInc( );
 		}
