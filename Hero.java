@@ -5,25 +5,19 @@ class Hero {
 	int width;
 	int height;
 	Posn pin;
-	int possibleBombs;
-	int givenBombs;
 	int health;
 
-	public Hero(int width, int height, Posn pin, int possibleBombs, int givenBombs, int health) {
+	public Hero(int width, int height, Posn pin, int health) {
 		this.width = width;
 		this.height = height;
 		this.pin = pin;
-		this.possibleBombs = possibleBombs;
-		this.givenBombs = givenBombs;
 		this.health = health;
 	}
 
-	public Hero( Posn pin, int possibleBombs, int givenBombs, int health) {
-		this.width = 15;
-		this.height = 15;
+	public Hero( Posn pin, int health) {
+		this.width = 30;
+		this.height = 50;
 		this.pin = pin;
-		this.possibleBombs = possibleBombs;
-		this.givenBombs = givenBombs;
 		this.health = health;
 	}
 
@@ -32,33 +26,24 @@ class Hero {
 
 		if ( ke.equals("right")) {
 			this.pin = new Posn( this.pin.x + this.width, this.pin.y );
-			return new Hero( this.pin, possibleBombs, givenBombs, health );
+			return new Hero( this.pin, health );
 		}
 		else if ( ke.equals("left")) {
 			this.pin = new Posn( this.pin.x - this.width, this.pin.y );
-			return new Hero( this.pin, possibleBombs, givenBombs, health );
+			return new Hero( this.pin, health );
 		}
 
 		else if ( ke.equals("down")) {
 			this.pin = new Posn(this.pin.x, this.pin.y + this.height);
-			return new Hero( this.pin, possibleBombs, givenBombs, health );
+			return new Hero( this.pin, health );
 		}
 
 		else if ( ke.equals("up")) {
 			this.pin = new Posn(this.pin.x, this.pin.y - this.height);
-			return new Hero( this.pin, possibleBombs, givenBombs, health );
+			return new Hero( this.pin, health );
 		}
 		else {
 			return this;
-		}
-	}
-
-
-	public Bomb makeBomb( String ke ) {
-		if( ke.equals("z") && (givenBombs < possibleBombs)) {
-			return new Bomb( pin );
-		} else { 
-			return null;  // err, don't return anything
 		}
 	}
 

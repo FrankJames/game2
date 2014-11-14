@@ -49,21 +49,26 @@ class OverWorld extends World {
 	Hero hero;
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
+	int firePower;
 
-	public OverWorld(int width, int height, Hero hero, LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ) {
+	public OverWorld(int width, int height, Hero hero, 
+		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
+		int firePower) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
+		this.firePower = firePower;
 	}
 
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList  ) {
-		this.width = 800;
-		this.height = 500;
+		this.width = 1000;
+		this.height = 750;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
+		this.firePower = 2;
 	}
 
 	public World onKeyEvent( String ke ) {
@@ -74,7 +79,6 @@ class OverWorld extends World {
 			return new OverWorld( hero.heroMove( ke ), bombList, explosionList );
 		} else if (ke.equals("z") ) {
 			bombList.add( new Bomb( 0, hero.pin ) );
-
 			return new OverWorld( hero, bombList, explosionList );
 		}
 		else {
@@ -86,13 +90,28 @@ class OverWorld extends World {
 
 		// check if each bomb should be removed from the bombList and added to explosionList
 		if( ( bombList.size( ) > 0 ) && ( bombList.element( ).checkGoBoom( ) ) ) {
+			Posn bombPin = bombList.removeFirst( ).pin;
+			
+			// center explosion always happens
+			explosionList.add( new Explosion( bombPin ) );
 
-			explosionList.add( new Explosion( bombList.removeFirst( ).pin ) );
-		}
+			int i = 0;
+			int offset = 30;
+			while(i < firePower) {
+				explosionList.add( new Explosion( new Posn( bombPin.x + offset, bombPin.y ) ) );
+				explosionList.add( new Explosion( new Posn( bombPin.x - offset, bombPin.y ) ) );
+				explosionList.add( new Explosion( new Posn( bombPin.x, bombPin.y + offset ) ) );
+				explosionList.add( new Explosion( new Posn( bombPin.x, bombPin.y - offset ) ) );
+				offset += 30;
+				i++;
+			}
 
-		if( ( explosionList.size( ) > 0 ) && ( explosionList.element( ).timer >= 5 ) ) {
+		}	
+		
+		// remove explosions that have been sticking around for too long
+		while( ( explosionList.size( ) > 0 ) && (explosionList.element( ).timer >= 5 ) ) {
 			explosionList.removeFirst( );
-		}
+			}
 
 		Iterator<Bomb> i  = bombList.listIterator( 0 );
 		Iterator<Explosion> j  = explosionList.listIterator( 0 );
@@ -134,7 +153,7 @@ class OverWorld extends World {
 
 	public static void main(String[ ] args ) {
 
-		Hero man = new Hero( new Posn( 50, 50 ), 2, 0, 3);
+		Hero man = new Hero( new Posn( 50, 50 ), 3);
 		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ) );
 
 		w.bigBang( 800, 500, 0.1);

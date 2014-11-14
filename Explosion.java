@@ -19,7 +19,7 @@ class Explosion {
 	}
 
 	public WorldImage explosionView( ) {
-		return new RectangleImage( pin, 10, 10, new Red( ) );
+		return new RectangleImage( pin, 30, 30, new Red( ) );
 	}
 
 	public Explosion  explosionTimeInc( ) {
