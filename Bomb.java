@@ -1,30 +1,28 @@
 import javalib.worldimages.*;
 import javalib.colors.*;
+import java.io.*;
+
 
 class Bomb {
 	int timer;
 	Posn pin;
-	/*
-	String filename;
-	FromFileImage image;
-	*/
+	WorldImage image;
 
 
 	public Bomb( int timer, Posn pin ) {
 		this.timer = timer;
 		this.pin = pin;
-	//	this.filename = "bomb.png";
-	//	FromFileImage( pin, filename );
+		this.image = new FromFileImage( pin, "bomb.png" );
 	}
 
 	public Bomb( Posn pin ) {
 		this.timer = 0;
 		this.pin = pin;
-	//	FromFileImage( pin, filename );
+		this.image = new FromFileImage( pin, "bomb.png" );
 	}
 
 	public WorldImage bombView( ) {
-		return new RectangleImage( pin, 30, 30, new Blue( ) );
+		return this.image;
 	}
 
 	public Bomb bombTimeInc( ) {

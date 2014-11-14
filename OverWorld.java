@@ -78,7 +78,7 @@ class OverWorld extends World {
 			|| (ke.equals("down") ) ) {
 			return new OverWorld( hero.heroMove( ke ), bombList, explosionList );
 		} else if (ke.equals("z") ) {
-			bombList.add( new Bomb( 0, hero.pin ) );
+			bombList.add( new Bomb( hero.pin ) );
 			return new OverWorld( hero, bombList, explosionList );
 		}
 		else {
@@ -105,7 +105,6 @@ class OverWorld extends World {
 				offset += 30;
 				i++;
 			}
-
 		}	
 		
 		// remove explosions that have been sticking around for too long
@@ -130,7 +129,7 @@ class OverWorld extends World {
 	}
 
 	WorldImage background = new OverlayImages(
-		new RectangleImage(new Posn(0, 0), 800, 500, new White( )),
+		new RectangleImage(new Posn(0, 0), 1000, 750, new White( )),
 		new RectangleImage(new Posn(100, 150), 50, 50, new Blue( ) ));  // completely unnecessary square
 
 	public WorldImage makeImage( ) {
@@ -138,15 +137,17 @@ class OverWorld extends World {
 		Iterator<Bomb> i  = bombList.listIterator(0);
 		Iterator<Explosion> j  = explosionList.listIterator(0);
 
-		WorldImage world = new OverlayImages( background, hero.heroView( ) );
+		WorldImage world = background;
 
 		while( i.hasNext( ) ) {
-			world = new OverlayImages( world, i.next( ).bombView( ) );
+			world = new OverlayImages( background, i.next( ).bombView( ) );
 		}
 
 		while ( j.hasNext( ) ) {
 			world = new OverlayImages( world, j.next( ).explosionView( ) );
 		}
+
+		world = new OverlayImages(world, hero.heroView( ) );
 
 		return world;
 	}
@@ -156,7 +157,7 @@ class OverWorld extends World {
 		Hero man = new Hero( new Posn( 50, 50 ), 3);
 		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ) );
 
-		w.bigBang( 800, 500, 0.1);
+		w.bigBang( 1000, 750, 0.1);
 
 	}
 } 

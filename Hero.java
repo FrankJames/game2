@@ -6,12 +6,14 @@ class Hero {
 	int height;
 	Posn pin;
 	int health;
+	WorldImage image;
 
 	public Hero(int width, int height, Posn pin, int health) {
-		this.width = width;
-		this.height = height;
 		this.pin = pin;
 		this.health = health;
+		this.image = new FromFileImage( pin, "hero.png" );
+		this.width = image.getWidth( );
+		this.height = image.getHeight( );
 	}
 
 	public Hero( Posn pin, int health) {
@@ -19,6 +21,7 @@ class Hero {
 		this.height = 50;
 		this.pin = pin;
 		this.health = health;
+		this.image = new FromFileImage( pin, "hero.png" );		
 	}
 
 
@@ -48,6 +51,7 @@ class Hero {
 	}
 
 	public WorldImage heroView( ) {
-		return new RectangleImage( pin, width, height, new Red() ); // red is a placeholder for the sprite 
+		return image;
+		//return new RectangleImage( pin, width, height, new Red() ); // red is a placeholder for the sprite 
 	}
 }

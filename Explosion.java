@@ -28,5 +28,4 @@ class Explosion {
 			return this;
 		} else {  return null; }
 	}
-	
 }
