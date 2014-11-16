@@ -1,25 +1,25 @@
 import javalib.worldimages.*;
 import javalib.colors.*;
 
-
-// Explosions are created from Bombs and have firepower according to the hero's bomb power from upgrades
-
 class Explosion {
 	int timer;
 	Posn pin;
+	WorldImage image;
 
 	public Explosion( Posn pin ) {
 		this.timer = 0;
 		this.pin = pin;
+		this.image = new FromFileImage( pin, "images/explosion.png" );
 	}
 
 	public Explosion( int timer, Posn pin ) {
 		this.timer = timer;
 		this.pin = pin;
+		this.image = new FromFileImage( pin, "images/explosion.png" );
 	}
 
 	public WorldImage explosionView( ) {
-		return new RectangleImage( pin, 30, 30, new Red( ) );
+		return new FromFileImage( pin, "images/explosion.png" );
 	}
 
 	public Explosion  explosionTimeInc( ) {
@@ -28,4 +28,6 @@ class Explosion {
 			return this;
 		} else {  return null; }
 	}
+
+	
 }

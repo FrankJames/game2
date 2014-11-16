@@ -11,7 +11,7 @@ class Hero {
 	public Hero(int width, int height, Posn pin, int health) {
 		this.pin = pin;
 		this.health = health;
-		this.image = new FromFileImage( pin, "hero.png" );
+		this.image = new FromFileImage( pin, "images/downhero.png" );
 		this.width = image.getWidth( );
 		this.height = image.getHeight( );
 	}
@@ -21,7 +21,15 @@ class Hero {
 		this.height = 50;
 		this.pin = pin;
 		this.health = health;
-		this.image = new FromFileImage( pin, "hero.png" );		
+		this.image = new FromFileImage( pin, "images/downhero.png" );		
+	}
+
+	public Hero( Posn pin, int health, String picturename ) {
+		this.width = 30;
+		this.height = 50;
+		this.pin = pin;
+		this.health = health;
+		this.image = new FromFileImage( pin, picturename );
 	}
 
 
@@ -29,29 +37,35 @@ class Hero {
 
 		if ( ke.equals("right")) {
 			this.pin = new Posn( this.pin.x + this.width, this.pin.y );
-			return new Hero( this.pin, health );
+			return new Hero( this.pin, health, "images/righthero.png" );
 		}
 		else if ( ke.equals("left")) {
 			this.pin = new Posn( this.pin.x - this.width, this.pin.y );
-			return new Hero( this.pin, health );
+			return new Hero( this.pin, health, "images/lefthero.png" );
 		}
 
 		else if ( ke.equals("down")) {
 			this.pin = new Posn(this.pin.x, this.pin.y + this.height);
-			return new Hero( this.pin, health );
+			return new Hero( this.pin, health, "images/downhero.png" );
 		}
 
 		else if ( ke.equals("up")) {
 			this.pin = new Posn(this.pin.x, this.pin.y - this.height);
-			return new Hero( this.pin, health );
+			return new Hero( this.pin, health, "images/uphero.png" );
 		}
 		else {
 			return this;
 		}
 	}
 
+ 	public boolean checkExplosion( Explosion e ) {
+ 		if ( e.pin.equals( this.pin ) )
+ 			return true;
+ 		else
+ 			return false;
+ 	}
+
 	public WorldImage heroView( ) {
 		return image;
-		//return new RectangleImage( pin, width, height, new Red() ); // red is a placeholder for the sprite 
 	}
 }

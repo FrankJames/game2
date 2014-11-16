@@ -20,27 +20,15 @@ The game itself will have:
 	6. non-destroyable background
 
 	On tick will need to:
-		1. checkcheckGoBoom for each bomb
+		1. checkGoBoom for each bomb
 		2. checkHitHero for each enemy
 		3. checkExplosion for hero/enemies/obstacles
 
 Other notes:
 	Potentially a boss dragon with randomized movement
-	Potentially sprites? file name from string hardcoded in 
-		*if sprites, will need 4 different sprites for each character-- face down, left, right, and up
-		*sprites done in gimp possibly
-
 
 The world needs to have different states:
-
 obviously there will be different rooms, but what about an inventory? or a title screen?
-
- */
-
-/*
-need to make it so that once a bomb's timer reaches the correct point, it is removed from the bombList and a corresponding explosion
-is added to the explosionList
-
 powerups could definitely be fields in the OverWorld, not in the Hero class
  */ 
 class OverWorld extends World {
@@ -49,25 +37,29 @@ class OverWorld extends World {
 	Hero hero;
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
+	LinkedList<Rocks> rockList;
 	int firePower;
 
 	public OverWorld(int width, int height, Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		int firePower) {
+		LinkedList<Rocks> rockList, int firePower) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
+		this.rockList = rockList;
 		this.firePower = firePower;
 	}
 
-	public OverWorld( Hero hero, LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList  ) {
+	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
+		LinkedList<Explosion> explosionList, LinkedList<Rocks> rockList ) {
 		this.width = 1000;
-		this.height = 750;
+		this.height = 650;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
+		this.rockList = rockList;
 		this.firePower = 2;
 	}
 
@@ -76,10 +68,10 @@ class OverWorld extends World {
 			|| (ke.equals("right") )
 			|| (ke.equals("left") )
 			|| (ke.equals("down") ) ) {
-			return new OverWorld( hero.heroMove( ke ), bombList, explosionList );
+			return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList );
 		} else if (ke.equals("z") ) {
 			bombList.add( new Bomb( hero.pin ) );
-			return new OverWorld( hero, bombList, explosionList );
+			return new OverWorld( hero, bombList, explosionList, rockList );
 		}
 		else {
 			return this;
@@ -125,39 +117,54 @@ class OverWorld extends World {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, bombList, explosionList );
+		return new OverWorld( hero, bombList, explosionList, rockList );
 	}
 
 	WorldImage background = new OverlayImages(
-		new RectangleImage(new Posn(0, 0), 1000, 750, new White( )),
-		new RectangleImage(new Posn(100, 150), 50, 50, new Blue( ) ));  // completely unnecessary square
+		new RectangleImage(new Posn(0, 0), 1000, 650, new White( )),
+		new RectangleImage(new Posn(100, 150), 50, 50, new White( ) ));  // completely unnecessary square
 
 	public WorldImage makeImage( ) {
 
 		Iterator<Bomb> i  = bombList.listIterator(0);
 		Iterator<Explosion> j  = explosionList.listIterator(0);
+		Iterator<Rocks> h = rockList.listIterator(0);
 
 		WorldImage world = background;
 
 		while( i.hasNext( ) ) {
-			world = new OverlayImages( background, i.next( ).bombView( ) );
+			world = new OverlayImages( world, i.next( ).bombView( ) );
 		}
 
 		while ( j.hasNext( ) ) {
 			world = new OverlayImages( world, j.next( ).explosionView( ) );
 		}
 
-		world = new OverlayImages(world, hero.heroView( ) );
+		while (h.hasNext( ) ) {
+			world = new OverlayImages( world, h.next( ).rockView( ) );
+		}
+
+		world = new OverlayImages(world, hero.heroView( ) );	 
 
 		return world;
 	}
 
+
+
+
+
 	public static void main(String[ ] args ) {
 
 		Hero man = new Hero( new Posn( 50, 50 ), 3);
-		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ) );
+		LinkedList<Rocks> levelOne = new LinkedList( );
+		levelOne.add( new DRock( new Posn( 100, 100 ) ) );
+		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
+		levelOne.add( new DRock( new Posn( 600, 300) ) );
 
-		w.bigBang( 1000, 750, 0.1);
 
+
+		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), levelOne );
+
+		w.bigBang( 1000, 650, 0.1);
 	}
 } 
