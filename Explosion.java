@@ -5,17 +5,23 @@ class Explosion {
 	int timer;
 	Posn pin;
 	WorldImage image;
+	int width;
+	int height;
 
 	public Explosion( Posn pin ) {
 		this.timer = 0;
 		this.pin = pin;
 		this.image = new FromFileImage( pin, "images/explosion.png" );
+		this.width = image.getWidth( );
+		this.height = image.getHeight( );
 	}
 
 	public Explosion( int timer, Posn pin ) {
 		this.timer = timer;
 		this.pin = pin;
 		this.image = new FromFileImage( pin, "images/explosion.png" );
+		this.width = image.getWidth( );
+		this.height = image.getHeight( );
 	}
 
 	public WorldImage explosionView( ) {
@@ -29,5 +35,5 @@ class Explosion {
 		} else {  return null; }
 	}
 
-	
+
 }

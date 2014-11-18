@@ -14,14 +14,12 @@ class NDRock implements Rocks {
  		this.height = 50;
  	}
 
+ 	// non-destructable rocks will never explode
   	public boolean checkExplosion( Explosion e ) {
- 		if ( e.pin.equals( this.pin ) )
- 			return true;
- 		else
- 			return false;
+  		return false;
  	}
  	
  	public WorldImage rockView( ) {
- 		return new RectangleImage( pin, width, height, new Brown( ) );
+ 		return new RectangleImage( pin, width, height, new Black( ) );
  	}
 }

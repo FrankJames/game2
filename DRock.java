@@ -21,13 +21,24 @@ import javalib.colors.*;
  	}
 
  	public boolean checkExplosion( Explosion e ) {
- 		if ( e.pin.equals( this.pin ) )
+ 		int a1 = this.pin.x;
+		int a2 = e.pin.x;
+		int b1 = this.pin.y;
+		int b2 = e.pin.y;
+
+		int halfRockWidth = this.width / 2;
+		int halfExpWidth = e.width / 2;
+		int halfRockHeight = this.height / 2;
+		int halfExpHeight = e.height / 2;
+
+ 		if ( ( Math.abs(a1 - a2) < ( halfExpWidth + halfRockWidth ) )
+			&& ( Math.abs(b1 - b2) < ( halfExpHeight + halfRockHeight ) ) )
  			return true;
  		else
  			return false;
  	}
  	
  	public WorldImage rockView( ) {
- 		return new RectangleImage( pin, width, height, new Blue( ) );
+ 		return new RectangleImage( pin, width, height, new Red( ) );
  	}
  }

@@ -8,20 +8,12 @@ class Hero {
 	int health;
 	WorldImage image;
 
-	public Hero(int width, int height, Posn pin, int health) {
+	public Hero( Posn pin, int health) {
 		this.pin = pin;
 		this.health = health;
 		this.image = new FromFileImage( pin, "images/downhero.png" );
 		this.width = image.getWidth( );
 		this.height = image.getHeight( );
-	}
-
-	public Hero( Posn pin, int health) {
-		this.width = 30;
-		this.height = 50;
-		this.pin = pin;
-		this.health = health;
-		this.image = new FromFileImage( pin, "images/downhero.png" );		
 	}
 
 	public Hero( Posn pin, int health, String picturename ) {

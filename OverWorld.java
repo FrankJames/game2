@@ -104,8 +104,32 @@ class OverWorld extends World {
 			explosionList.removeFirst( );
 			}
 
-		Iterator<Bomb> i  = bombList.listIterator( 0 );
 		Iterator<Explosion> j  = explosionList.listIterator( 0 );
+		LinkedList<Rocks> nextRockList = new LinkedList( );
+		Iterator<Rocks> k = rockList.listIterator( 0 );
+		
+
+
+		// check through each explosion to see if it is colliding with any (destructable) rock
+		// this will build an updated RockList with all of the rocks that are not currently being destroyed,
+		// which we will later pass into our game constructor
+		while ( k.hasNext( ) ) {
+			Rocks rocky = k.next( );
+			nextRockList.add( rocky );
+
+			while( j.hasNext( ) ) {
+				Explosion exp = j.next( );
+
+				if (  rocky.checkExplosion( exp )  )
+					nextRockList.remove( rocky );
+			}
+			j = explosionList.listIterator( 0 );
+
+		}
+		
+
+		Iterator<Bomb> i  = bombList.listIterator( 0 );
+		j  = explosionList.listIterator( 0 );
 
 		// increase each bomb's timer
 		while( i.hasNext( ) ) {
@@ -117,7 +141,7 @@ class OverWorld extends World {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, bombList, explosionList, rockList );
+		return new OverWorld( hero, bombList, explosionList, nextRockList );
 	}
 
 	WorldImage background = new OverlayImages(
@@ -160,6 +184,7 @@ class OverWorld extends World {
 		levelOne.add( new DRock( new Posn( 100, 100 ) ) );
 		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
 		levelOne.add( new DRock( new Posn( 600, 300) ) );
+		levelOne.add( new NDRock( new Posn( 700, 500) ) );
 
 
 
