@@ -28,8 +28,7 @@ class Bomb {
 	}
 
 	public Bomb bombTimeInc( ) {
-		this.timer++;
-		return this;
+		return new Bomb( timer + 1, pin );
 	}
 
 	public boolean checkGoBoom( ) {
@@ -40,7 +39,7 @@ class Bomb {
 		}
 	}
 
-	public void checkExplosion( Explosion e ) {
+	public boolean checkExplosion( Explosion e ) {
  		int a1 = this.pin.x;
 		int a2 = e.pin.x;
 		int b1 = this.pin.y;
@@ -54,7 +53,9 @@ class Bomb {
  		if ( ( Math.abs(a1 - a2) < ( halfExpWidth + halfBombWidth ) )
 			&& ( Math.abs(b1 - b2) < ( halfExpHeight + halfBombHeight ) ) ) {
 
- 			this.timer = 10;
+ 			return true;
+ 		} else {
+ 			return false;
  		}
  	}
 

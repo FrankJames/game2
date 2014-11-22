@@ -63,7 +63,7 @@ class OverWorld extends World {
 		this.explosionList = explosionList;
 		this.rockList = rockList;
 		this.firePower = 2;
-		this.bombNum = 2;
+		this.bombNum = 5;
 	}
 
 	public World onKeyEvent( String ke ) {
@@ -178,12 +178,25 @@ class OverWorld extends World {
 		
 
 		Iterator<Bomb> i  = bombList.listIterator( 0 );
+		LinkedList<Bomb> nextBombList = new LinkedList( );
 		j  = explosionList.listIterator( 0 );
 
 
-		// increase each bomb's timer
+		// increase each bomb's timer and check if each bomb overlaps with any explosion
+		// in which case it creates a bomb that will immediately explode
 		while( i.hasNext( ) ) {
-			i.next( ).bombTimeInc( );
+			Bomb bomby = i.next( );
+			nextBombList.add( bomby.bombTimeInc( ) );
+
+			while( j.hasNext( ) ) {
+				Explosion expl = j.next( );
+
+				if ( bomby.checkExplosion( expl ) ) {
+					nextBombList.removeLast( );
+					nextBombList.add( new Bomb( bomby.timer + 10, bomby.pin ) );
+				}
+			}
+			j = explosionList.listIterator( 0 );
 		}
 
 		// increase each explosion's timer
@@ -191,7 +204,7 @@ class OverWorld extends World {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, bombList, explosionList, nextRockList );
+		return new OverWorld( hero, nextBombList, explosionList, nextRockList );
 	}
 
 	WorldImage background =  new RectangleImage(new Posn(0, 0), 1000, 650, new White( ) );
