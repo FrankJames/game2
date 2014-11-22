@@ -1,23 +1,17 @@
 import javalib.worldimages.*;
 import javalib.colors.*;
 
-/*
- destructable rocks are: 
- 	- non-passable terrain
- 	- destroyable by explosions
- 	- 
-
-*/
-
  class DRock implements Rocks {
  	Posn pin;
  	int width;
  	int height;
+ 	WorldImage image;
 
  	public DRock( Posn pin ) {
  		this.pin = pin;
  		this.width = 50;
  		this.height = 50;
+ 		this.image = new FromFileImage( pin, "images/drock.png" );
  	}
 
  	public boolean checkExplosion( Explosion e ) {
@@ -39,6 +33,18 @@ import javalib.colors.*;
  	}
  	
  	public WorldImage rockView( ) {
- 		return new RectangleImage( pin, width, height, new Red( ) );
+ 		return image;
+ 	}
+
+ 	public Posn getPin( ) {
+ 		return pin;
+ 	}
+
+ 	public int getWidth( ) {
+ 		return width;
+ 	}
+
+ 	public int getHeight( ) {
+ 		return height;
  	}
  }

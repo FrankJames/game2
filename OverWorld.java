@@ -39,10 +39,11 @@ class OverWorld extends World {
 	LinkedList<Explosion> explosionList;
 	LinkedList<Rocks> rockList;
 	int firePower;
+	int bombNum;
 
 	public OverWorld(int width, int height, Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		LinkedList<Rocks> rockList, int firePower) {
+		LinkedList<Rocks> rockList, int firePower, int bombNum ) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
@@ -50,6 +51,7 @@ class OverWorld extends World {
 		this.explosionList = explosionList;
 		this.rockList = rockList;
 		this.firePower = firePower;
+		this.bombNum = bombNum;
 	}
 
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
@@ -61,15 +63,62 @@ class OverWorld extends World {
 		this.explosionList = explosionList;
 		this.rockList = rockList;
 		this.firePower = 2;
+		this.bombNum = 2;
 	}
 
 	public World onKeyEvent( String ke ) {
+
+		Iterator<Rocks> k = rockList.listIterator( 0 );
+
 		if ( (ke.equals("up") )
 			|| (ke.equals("right") )
 			|| (ke.equals("left") )
 			|| (ke.equals("down") ) ) {
-			return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList );
-		} else if (ke.equals("z") ) {
+
+			boolean canMove = true;
+			boolean canMoveHalf = true;
+			boolean canMoveQuarter = true;
+			boolean canMoveEigth = true;
+			boolean canMoveSixteenth = true;
+
+			while( k.hasNext( ) ) {
+				Rocks r = k.next( );
+				if ( hero.heroMove( ke ).checkRock( r ) ) {
+					canMove = false;
+				}
+
+				if ( hero.heroMove( ke, 2 ).checkRock( r ) ) {
+					canMoveHalf = false;
+				}
+
+				if ( hero.heroMove( ke, 4 ).checkRock( r ) ) {
+					canMoveQuarter = false;
+				}
+
+				if ( hero.heroMove( ke, 8 ).checkRock( r ) ) {
+					canMoveEigth = false;
+				}
+
+				if ( hero.heroMove( ke, 16 ).checkRock( r ) ) {
+					canMoveSixteenth = false;
+				}
+			}
+
+			if ( canMove ) {
+				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList );
+			} else if ( canMoveHalf )  {
+				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, rockList );
+			} else if ( canMoveQuarter ) {
+				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, rockList );
+			} else if ( canMoveEigth ) {
+				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, rockList );
+			} else if ( canMoveSixteenth ) {
+				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, rockList );
+			} else {
+				return this;
+			}
+
+		} else if ( ke.equals("z")  && ( bombList.size( ) < bombNum ) ) {
 			bombList.add( new Bomb( hero.pin ) );
 			return new OverWorld( hero, bombList, explosionList, rockList );
 		}
@@ -131,6 +180,7 @@ class OverWorld extends World {
 		Iterator<Bomb> i  = bombList.listIterator( 0 );
 		j  = explosionList.listIterator( 0 );
 
+
 		// increase each bomb's timer
 		while( i.hasNext( ) ) {
 			i.next( ).bombTimeInc( );
@@ -144,9 +194,7 @@ class OverWorld extends World {
 		return new OverWorld( hero, bombList, explosionList, nextRockList );
 	}
 
-	WorldImage background = new OverlayImages(
-		new RectangleImage(new Posn(0, 0), 1000, 650, new White( )),
-		new RectangleImage(new Posn(100, 150), 50, 50, new White( ) ));  // completely unnecessary square
+	WorldImage background =  new RectangleImage(new Posn(0, 0), 1000, 650, new White( ) );
 
 	public WorldImage makeImage( ) {
 
@@ -185,7 +233,6 @@ class OverWorld extends World {
 		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
 		levelOne.add( new DRock( new Posn( 600, 300) ) );
 		levelOne.add( new NDRock( new Posn( 700, 500) ) );
-
 
 
 		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), levelOne );
