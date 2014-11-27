@@ -77,9 +77,24 @@ class Hero {
 		}
 	}
 
+	public Hero heroSet( Posn pin2 ) {
+		return new Hero( pin2, this.health );
+	}
+
 	// in overworld, iterate through, check if this is flagged on clock tick
  	public boolean checkExplosion( Explosion e ) {
- 		if ( e.pin.equals( this.pin ) )
+		int a1 = this.pin.x;
+		int a2 = e.getPin( ).x;
+		int b1 = this.pin.y;
+		int b2 = e.getPin( ).y;
+
+		int halfHeroWidth = this.width / 2;
+		int halfExpWidth = e.getWidth( ) / 2;
+		int halfHeroHeight = this.height / 2;
+		int halfExpHeight = e.getHeight( ) / 2;
+
+ 		if ( ( Math.abs(a1 - a2) < ( halfExpWidth + halfHeroWidth ) )
+			&& ( Math.abs(b1 - b2) < ( halfExpHeight + halfHeroHeight ) ) )
  			return true;
  		else
  			return false;

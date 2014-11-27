@@ -24,6 +24,18 @@ class Explosion {
 		this.height = image.getHeight( );
 	}
 
+	public Posn getPin( ) {
+		return pin;
+	}
+
+	public int getWidth( ) {
+		return width;
+	}
+
+	public int getHeight( ) {
+		return height;
+	}
+
 	public WorldImage explosionView( ) {
 		return new FromFileImage( pin, "images/explosion.png" );
 	}

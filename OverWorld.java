@@ -38,30 +38,33 @@ class OverWorld extends World {
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
 	LinkedList<Rocks> rockList;
+	LinkedList<Enemies> enemyList;
 	int firePower;
 	int bombNum;
 
 	public OverWorld(int width, int height, Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		LinkedList<Rocks> rockList, int firePower, int bombNum ) {
+		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, int firePower, int bombNum ) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
 		this.rockList = rockList;
+		this.enemyList = enemyList;
 		this.firePower = firePower;
 		this.bombNum = bombNum;
 	}
 
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
-		LinkedList<Explosion> explosionList, LinkedList<Rocks> rockList ) {
+		LinkedList<Explosion> explosionList, LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList ) {
 		this.width = 1000;
 		this.height = 650;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
 		this.rockList = rockList;
+		this.enemyList = enemyList;
 		this.firePower = 2;
 		this.bombNum = 5;
 	}
@@ -80,6 +83,7 @@ class OverWorld extends World {
 			boolean canMoveQuarter = true;
 			boolean canMoveEigth = true;
 			boolean canMoveSixteenth = true;
+			boolean canMoveThirtySecond = true;
 
 			while( k.hasNext( ) ) {
 				Rocks r = k.next( );
@@ -102,25 +106,31 @@ class OverWorld extends World {
 				if ( hero.heroMove( ke, 16 ).checkRock( r ) ) {
 					canMoveSixteenth = false;
 				}
+
+				if ( hero.heroMove( ke, 32 ).checkRock( r ) ) {
+					canMoveThirtySecond = false;
+				}
 			}
 
 			if ( canMove ) {
-				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList );
+				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList, enemyList );
 			} else if ( canMoveHalf )  {
-				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, rockList );
+				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, rockList, enemyList );
 			} else if ( canMoveQuarter ) {
-				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, rockList );
+				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, rockList, enemyList );
 			} else if ( canMoveEigth ) {
-				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, rockList );
+				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, rockList, enemyList );
 			} else if ( canMoveSixteenth ) {
-				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, rockList );
+				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, rockList, enemyList );
+			} else if ( canMoveThirtySecond ) {
+				return new OverWorld( hero.heroMove( ke, 32 ), bombList, explosionList, rockList, enemyList );
 			} else {
 				return this;
 			}
 
 		} else if ( ke.equals("z")  && ( bombList.size( ) < bombNum ) ) {
 			bombList.add( new Bomb( hero.pin ) );
-			return new OverWorld( hero, bombList, explosionList, rockList );
+			return new OverWorld( hero, bombList, explosionList, rockList, enemyList );
 		}
 		else {
 			return this;
@@ -183,7 +193,7 @@ class OverWorld extends World {
 
 
 		// increase each bomb's timer and check if each bomb overlaps with any explosion
-		// in which case it creates a bomb that will immediately explode
+		// in which case it creates a bomb that will immediately explodes
 		while( i.hasNext( ) ) {
 			Bomb bomby = i.next( );
 			nextBombList.add( bomby.bombTimeInc( ) );
@@ -199,21 +209,52 @@ class OverWorld extends World {
 			j = explosionList.listIterator( 0 );
 		}
 
+		LinkedList<Enemies> nextEnemyList = new LinkedList( );
+		Iterator<Enemies> l = enemyList.listIterator( 0 );
+		k = rockList.listIterator( 0 );
+
+
+		// iterate through, checkRock on each one, if true then add l.next( ).enemyMove( ), else add l.next( )
+		while( l.hasNext( ) ) {
+			Enemies e = l.next( );
+			Enemies eNext = e.enemyMove( );
+			boolean enemyCanMove = true;
+
+			while( k.hasNext( ) ) {
+				Rocks checkAgainstRock = k.next( );
+
+				
+				// if the next enemy movement would collide, we need to change direction
+				if ( eNext.checkRock( checkAgainstRock ) ) {
+					enemyCanMove = false;
+					}
+			}
+			k = rockList.listIterator( 0 );
+
+			if( enemyCanMove ) {
+				nextEnemyList.add( eNext ); 
+			} else {
+				nextEnemyList.add( e.enemyChangeDirection( ) );
+			}
+
+		}
+
 		// increase each explosion's timer
 		while( j.hasNext( ) ) {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, nextBombList, explosionList, nextRockList );
+		return new OverWorld( hero, nextBombList, explosionList, nextRockList, nextEnemyList );
 	}
 
 	WorldImage background =  new RectangleImage(new Posn(0, 0), 1000, 650, new White( ) );
 
 	public WorldImage makeImage( ) {
 
-		Iterator<Bomb> i  = bombList.listIterator(0);
-		Iterator<Explosion> j  = explosionList.listIterator(0);
-		Iterator<Rocks> h = rockList.listIterator(0);
+		Iterator<Bomb> i  = bombList.listIterator( 0 );
+		Iterator<Explosion> j  = explosionList.listIterator( 0 );
+		Iterator<Rocks> k = rockList.listIterator( 0 );
+		Iterator<Enemies> l = enemyList.listIterator( 0 );
 
 		WorldImage world = background;
 
@@ -225,8 +266,12 @@ class OverWorld extends World {
 			world = new OverlayImages( world, j.next( ).explosionView( ) );
 		}
 
-		while (h.hasNext( ) ) {
-			world = new OverlayImages( world, h.next( ).rockView( ) );
+		while (k.hasNext( ) ) {
+			world = new OverlayImages( world, k.next( ).rockView( ) );
+		}
+
+		while (l.hasNext( ) ) {
+			world = new OverlayImages( world, l.next( ).enemyView( ) );
 		}
 
 		world = new OverlayImages(world, hero.heroView( ) );	 
@@ -236,19 +281,88 @@ class OverWorld extends World {
 
 
 
-
-
 	public static void main(String[ ] args ) {
 
-		Hero man = new Hero( new Posn( 50, 50 ), 3);
-		LinkedList<Rocks> levelOne = new LinkedList( );
-		levelOne.add( new DRock( new Posn( 100, 100 ) ) );
-		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
-		levelOne.add( new DRock( new Posn( 600, 300) ) );
-		levelOne.add( new NDRock( new Posn( 700, 500) ) );
+		Hero man = new Hero( new Posn( 100, 150 ), 3);
+		LinkedList<Rocks> border = new LinkedList( );
+		border.add( new DRock( new Posn( 500, 100 ) ) );
+		border.add( new DRock( new Posn( 250, 400 ) ) );
+		border.add( new DRock( new Posn( 600, 300) ) ) ;
 
 
-		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), levelOne );
+		border.add( new NDRock( new Posn( 25, 25 ) ) ) ; // horizontal top of screen
+		border.add( new NDRock( new Posn( 75, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 125, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 175, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 225, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 275, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 325, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 375, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 425, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 475, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 525, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 575, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 625, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 675, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 725, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 775, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 825, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 875, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 925, 25 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 25 ) ) ) ;
+
+
+		border.add( new NDRock( new Posn( 25, 75 ) ) ) ; // vertical left side
+		border.add( new NDRock( new Posn( 25, 125 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 175 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 225 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 275 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 325 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 375 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 425 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 475 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 525 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 575 ) ) ) ;
+		border.add( new NDRock( new Posn( 25, 625 ) ) ) ;
+
+		border.add( new NDRock( new Posn( 75, 625 ) ) ) ; // horizontal bottom
+		border.add( new NDRock( new Posn( 125, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 175, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 225, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 275, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 325, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 375, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 425, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 475, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 525, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 575, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 625, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 675, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 725, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 775, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 825, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 875, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 925, 625 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 625 ) ) ) ;
+
+		border.add( new NDRock( new Posn( 975, 75) ) ) ; // vertical right
+		border.add( new NDRock( new Posn( 975, 125 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 175 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 225 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 275 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 325 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 375 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 425 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 475 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 525 ) ) ) ;
+		border.add( new NDRock( new Posn( 975, 575 ) ) ) ;
+
+		LinkedList scaryList = new LinkedList( );
+		scaryList.add( new Baddy( new Posn( 350, 250 ), 0 ) );
+
+
+
+		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), border, scaryList );
 
 		w.bigBang( 1000, 650, 0.1);
 	}
