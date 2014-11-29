@@ -13,18 +13,21 @@ class Baddy implements Enemies {
 	int width;
 	int height;
 	int lastMove;
-
-	public Baddy( Posn pin, int width, int height, int lastMove ) {
-		this.pin = pin;
-		this.width = width;
-		this.height = height;
-		this.lastMove = lastMove;
-	}
+	WorldImage image;
 
 	public Baddy( Posn pin, int lastMove ) {
 		this.pin = pin;
-		this.width = 50;
-		this.height = 50;
+		this.image = new FromFileImage( pin, "images/downbaddy.png" );
+		this.width = image.getWidth( );
+		this.height = image.getHeight( );
+		this.lastMove = lastMove;
+	}
+
+	public Baddy( Posn pin, String picturename, int lastMove ) {
+		this.pin = pin;
+		this.image = new FromFileImage( pin, picturename );
+		this.width = image.getWidth( );
+		this.height = image.getHeight( );
 		this.lastMove = lastMove;
 	}
 
@@ -35,19 +38,26 @@ class Baddy implements Enemies {
 	// continues moving in the same direction
 	public Baddy enemyMove( ) {
 		if ( lastMove == 0 ) {
-			return new Baddy( new Posn( pin.x, pin.y + height), width, height, 0 );
+			return new Baddy( new Posn( pin.x, pin.y + 20), "images/downbaddy.png", 0 );
 		} else 	if ( lastMove == 1 ) {
-			return new Baddy( new Posn( pin.x + width, pin.y), width, height, 1 );
+			return new Baddy( new Posn( pin.x + 20, pin.y), "images/rightbaddy.png", 1 );
 		} else if ( lastMove == 2 ) {
-			return new Baddy( new Posn( pin.x, pin.y - height), width, height, 2 );
+			return new Baddy( new Posn( pin.x, pin.y - 20), "images/upbaddy.png", 2 );
 		} else
-			return new Baddy( new Posn( pin.x - width, pin.y), width, height, 3 );
+			return new Baddy( new Posn( pin.x - 20, pin.y), "images/leftbaddy.png", 3 );
 	}
 
 	// change direction!
 	public Baddy enemyChangeDirection( ) {
 		int randDir = (int)(Math.random( ) * 4 );
-		return new Baddy( pin, width, height, randDir );
+		if ( randDir == 0 ) {
+			return new Baddy( pin, "images/downbaddy.png", 0 );
+		} else 	if ( randDir == 1 ) {
+			return new Baddy( pin, "images/rightbaddy.png", 1 ); 
+		} else if ( randDir == 2 ) {
+			return new Baddy( pin, "images/upbaddy.png", 2 ); 
+		} else
+			return new Baddy( pin, "images/leftbaddy.png", 3 ); 
 	}
 
 
@@ -71,7 +81,7 @@ class Baddy implements Enemies {
  	}
 
 	public WorldImage enemyView( ) {
-		return new RectangleImage( pin, 50, 50, new Blue( ) );
+		return image;
 	}
  	public boolean checkExplosion( Explosion e ) {
  		return false;

@@ -56,6 +56,20 @@ class OverWorld extends World {
 		this.bombNum = bombNum;
 	}
 
+	public OverWorld( Hero hero, 
+		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
+		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, int firePower, int bombNum ) {
+		this.width = width;
+		this.height = height;
+		this.hero = hero;
+		this.bombList = bombList;
+		this.explosionList = explosionList;
+		this.rockList = rockList;
+		this.enemyList = enemyList;
+		this.firePower = firePower;
+		this.bombNum = bombNum;
+	}
+
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
 		LinkedList<Explosion> explosionList, LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList ) {
 		this.width = 1000;
@@ -66,7 +80,7 @@ class OverWorld extends World {
 		this.rockList = rockList;
 		this.enemyList = enemyList;
 		this.firePower = 2;
-		this.bombNum = 5;
+		this.bombNum = 3;
 	}
 
 	public World onKeyEvent( String ke ) {
@@ -113,25 +127,42 @@ class OverWorld extends World {
 			}
 
 			if ( canMove ) {
-				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else if ( canMoveHalf )  {
-				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else if ( canMoveQuarter ) {
-				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else if ( canMoveEigth ) {
-				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else if ( canMoveSixteenth ) {
-				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else if ( canMoveThirtySecond ) {
-				return new OverWorld( hero.heroMove( ke, 32 ), bombList, explosionList, rockList, enemyList );
+				return new OverWorld( hero.heroMove( ke, 32 ), bombList, explosionList, 
+										rockList, enemyList, firePower, bombNum );
+
 			} else {
 				return this;
 			}
 
 		} else if ( ke.equals("z")  && ( bombList.size( ) < bombNum ) ) {
 			bombList.add( new Bomb( hero.pin ) );
-			return new OverWorld( hero, bombList, explosionList, rockList, enemyList );
+			return new OverWorld( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
 		}
+
+		else if ( ke.equals("b") ) {
+			return new Menu( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
+		}
+		
 		else {
 			return this;
 		}
@@ -214,7 +245,8 @@ class OverWorld extends World {
 		k = rockList.listIterator( 0 );
 
 
-		// iterate through, checkRock on each one, if true then add l.next( ).enemyMove( ), else add l.next( )
+		// iterate through, checkRock for each enemy, if true then have to switch directions, 
+		// else continue forward
 		while( l.hasNext( ) ) {
 			Enemies e = l.next( );
 			Enemies eNext = e.enemyMove( );
@@ -244,10 +276,10 @@ class OverWorld extends World {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, nextBombList, explosionList, nextRockList, nextEnemyList );
+		return new OverWorld( hero, nextBombList, explosionList, nextRockList, nextEnemyList, firePower, bombNum );
 	}
 
-	WorldImage background =  new RectangleImage(new Posn(0, 0), 1000, 650, new White( ) );
+
 
 	public WorldImage makeImage( ) {
 
@@ -256,7 +288,7 @@ class OverWorld extends World {
 		Iterator<Rocks> k = rockList.listIterator( 0 );
 		Iterator<Enemies> l = enemyList.listIterator( 0 );
 
-		WorldImage world = background;
+		WorldImage world = new RectangleImage(new Posn(0, 0), 1000, 650, new White( ) );
 
 		while( i.hasNext( ) ) {
 			world = new OverlayImages( world, i.next( ).bombView( ) );
