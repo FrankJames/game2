@@ -316,85 +316,40 @@ class OverWorld extends World {
 	public static void main(String[ ] args ) {
 
 		Hero man = new Hero( new Posn( 100, 150 ), 3);
-		LinkedList<Rocks> border = new LinkedList( );
-		border.add( new DRock( new Posn( 500, 100 ) ) );
-		border.add( new DRock( new Posn( 250, 400 ) ) );
-		border.add( new DRock( new Posn( 600, 300) ) ) ;
+		LinkedList<Rocks> levelOne = new LinkedList( );
 
+		int x = 25;
+		int y = 75;
 
-		border.add( new NDRock( new Posn( 25, 25 ) ) ) ; // horizontal top of screen
-		border.add( new NDRock( new Posn( 75, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 125, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 175, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 225, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 275, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 325, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 375, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 425, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 475, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 525, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 575, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 625, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 675, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 725, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 775, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 825, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 875, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 925, 25 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 25 ) ) ) ;
+		// horizontal borders
+		while( x < 1000 ) {
+			levelOne.add( new NDRock( new Posn( x, 50 ) ) );
+			levelOne.add( new NDRock( new Posn( x, 625 ) ) );
+			x+= 50;
+		}
 
+		// vertical borders and the exit!
+		while( y < 625 ) {
+			levelOne.add( new NDRock( new Posn( 25, y ) ) );
 
-		border.add( new NDRock( new Posn( 25, 75 ) ) ) ; // vertical left side
-		border.add( new NDRock( new Posn( 25, 125 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 175 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 225 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 275 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 325 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 375 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 425 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 475 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 525 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 575 ) ) ) ;
-		border.add( new NDRock( new Posn( 25, 625 ) ) ) ;
+			if( ( y < 500 ) && ( y > 300 ) ) 
+				levelOne.add( new DRock( new Posn( 975, y ) ) );
+			 else 
+				levelOne.add( new NDRock( new Posn( 975, y ) ) );
+			
+			y+= 25;
+		}
 
-		border.add( new NDRock( new Posn( 75, 625 ) ) ) ; // horizontal bottom
-		border.add( new NDRock( new Posn( 125, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 175, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 225, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 275, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 325, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 375, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 425, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 475, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 525, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 575, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 625, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 675, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 725, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 775, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 825, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 875, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 925, 625 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 625 ) ) ) ;
-
-		border.add( new NDRock( new Posn( 975, 75) ) ) ; // vertical right
-		border.add( new NDRock( new Posn( 975, 125 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 175 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 225 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 275 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 325 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 375 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 425 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 475 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 525 ) ) ) ;
-		border.add( new NDRock( new Posn( 975, 575 ) ) ) ;
+		levelOne.add( new DRock( new Posn( 500, 100 ) ) );
+		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
+		levelOne.add( new DRock( new Posn( 600, 300) ) ) ;
 
 		LinkedList scaryList = new LinkedList( );
 		scaryList.add( new Baddy( new Posn( 350, 250 ), 0 ) );
 
 
 
-		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), border, scaryList );
+		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), levelOne, scaryList );
 
 		w.bigBang( 1000, 650, 0.1);
 	}
