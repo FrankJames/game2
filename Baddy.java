@@ -32,8 +32,23 @@ class Baddy implements Enemies {
 	}
 
 	public boolean checkHitHero( Hero h ) {
-		return false;
-	}
+		int a1 = this.pin.x;
+		int a2 = h.getPin( ).x;
+		int b1 = this.pin.y;
+		int b2 = h.getPin( ).y;
+
+		int halfBaddyWidth = this.width / 2;
+		int halfHeroWidth = h.getWidth( ) / 2;
+		int halfBaddyHeight = this.height / 2;
+		int halfHeroHeight = h.getHeight( ) / 2;
+
+ 		if ( ( Math.abs(a1 - a2) < ( halfHeroWidth + halfBaddyWidth ) )
+			&& ( Math.abs(b1 - b2) < ( halfHeroHeight + halfBaddyHeight ) ) )
+ 			return true;
+ 		else
+ 			return false;
+
+ 	}
 
 	// continues moving in the same direction
 	public Baddy enemyMove( ) {
@@ -83,8 +98,21 @@ class Baddy implements Enemies {
 	public WorldImage enemyView( ) {
 		return image;
 	}
+
+	public Posn getPin( ) {
+		return pin;
+	}
+
+	public int getWidth( ) {
+		return width;
+	}
+
+	public int getHeight( ) {
+		return height;
+	}
+
  	public boolean checkExplosion( Explosion e ) {
- 		 int a1 = this.pin.x;
+ 		int a1 = this.pin.x;
 		int a2 = e.getPin( ).x;
 		int b1 = this.pin.y;
 		int b2 = e.getPin( ).y;

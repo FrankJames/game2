@@ -86,6 +86,7 @@ class OverWorld extends World {
 	public World onKeyEvent( String ke ) {
 
 		Iterator<Rocks> k = rockList.listIterator( 0 );
+		Iterator<Enemies> m = enemyList.listIterator( 0 );
 
 		if ( (ke.equals("up") )
 			|| (ke.equals("right") )
@@ -122,6 +123,33 @@ class OverWorld extends World {
 				}
 
 				if ( hero.heroMove( ke, 32 ).checkRock( r ) ) {
+					canMoveThirtySecond = false;
+				}
+			}
+
+			while( m.hasNext( ) ) {
+				Enemies e = m.next( );
+				if ( hero.heroMove( ke ).checkEnemy( e ) ) {
+					canMove = false;
+				}
+
+				if ( hero.heroMove( ke, 2 ).checkEnemy( e ) ) {
+					canMoveHalf = false;
+				}
+
+				if ( hero.heroMove( ke, 4 ).checkEnemy( e ) ) {
+					canMoveQuarter = false;
+				}
+
+				if ( hero.heroMove( ke, 8 ).checkEnemy( e ) ) {
+					canMoveEigth = false;
+				}
+
+				if ( hero.heroMove( ke, 16 ).checkEnemy( e ) ) {
+					canMoveSixteenth = false;
+				}
+
+				if ( hero.heroMove( ke, 32 ).checkEnemy( e ) ) {
 					canMoveThirtySecond = false;
 				}
 			}
@@ -246,13 +274,32 @@ class OverWorld extends World {
 		}
 
 
-		k = rockList.listIterator( 0 );
 
+		// iterate through the list and check if we need to remove them
+		// because of a collision with an explosion
+		while( l.hasNext( ) ) {
+			Enemies nextEnemy = l.next( );
+
+			partEnemyList.add( nextEnemy );
+
+			while( j.hasNext( ) ) {
+				Explosion explo = j.next( );
+
+				if( nextEnemy.checkExplosion( explo ) ) {
+					partEnemyList.remove( nextEnemy );
+				}
+			}
+
+			j = explosionList.listIterator( 0 );
+		}
+
+		Iterator<Enemies> m = partEnemyList.listIterator( 0 );
+		k = rockList.listIterator( 0 );
 
 		// iterate through, checkRock for each enemy, if true then have to switch directions, 
 		// else continue forward
-		while( l.hasNext( ) ) {
-			Enemies e = l.next( );
+		while( m.hasNext( ) ) {
+			Enemies e = m.next( );
 			Enemies eNext = e.enemyMove( );
 			boolean enemyCanMove = true;
 
@@ -268,30 +315,19 @@ class OverWorld extends World {
 
 			k = rockList.listIterator( 0 );
 
-			if( enemyCanMove ) {
-					partEnemyList.add( eNext ); 
-				} else {
-					partEnemyList.add( e.enemyChangeDirection( ) );
-				}
-		}
-
-		Iterator<Enemies> m = partEnemyList.listIterator( 0 );
-
-		while( m.hasNext( ) ) {
-			Enemies nextEnemy = m.next( );
-
-			nextEnemyList.add( nextEnemy );
-
-			while( j.hasNext( ) ) {
-				Explosion explo = j.next( );
-
-				if( nextEnemy.checkExplosion( explo ) ) {
-					nextEnemyList.remove( nextEnemy );
-				}
+			if ( eNext.checkHitHero( hero ) ){
+				enemyCanMove = false;
 			}
 
-			j = explosionList.listIterator( 0 );
+			if( enemyCanMove ) {
+					nextEnemyList.add( eNext ); 
+				} else {
+					nextEnemyList.add( e.enemyChangeDirection( ) );
+				}
+
 		}
+
+
 
 		// increase each explosion's timer
 		while( j.hasNext( ) ) {

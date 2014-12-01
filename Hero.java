@@ -119,15 +119,40 @@ class Hero {
  			return false;
  	}
 
- 	// placeholder function
- 	public boolean checkEnemy( Enemies baddies ) {
- 		if ( 1 == 0 )
+ 	public boolean checkEnemy( Enemies e ) {
+ 		int a1 = this.pin.x;
+		int a2 = e.getPin( ).x;
+		int b1 = this.pin.y;
+		int b2 = e.getPin( ).y;
+
+		int halfHeroWidth = this.width / 2;
+		int halfEnemyWidth = e.getWidth( ) / 2;
+		int halfHeroHeight = this.height / 2;
+		int halfEnemyHeight = e.getHeight( ) / 2;
+
+ 		if ( ( Math.abs(a1 - a2) < ( halfEnemyWidth + halfHeroWidth ) )
+			&& ( Math.abs(b1 - b2) < ( halfEnemyHeight + halfHeroHeight ) ) )
  			return true;
  		else
  			return false;
  	}
 
+
+ 	public Posn getPin( ) {
+		return pin;
+	}
+
+	public int getWidth( ) {
+		return width;
+	}
+
+	public int getHeight( ) {
+		return height;
+	}
+
 	public WorldImage heroView( ) {
 		return image;
 	}
+
+
 }

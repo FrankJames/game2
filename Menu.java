@@ -40,8 +40,8 @@ The cursor arrow will be represented as a number. Arrow can either be 0 or 1.
 */
 
 class Menu extends World {
-	int width; // 1000
-	int height; // 650
+	int width;
+	int height;
 	Hero hero;
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
