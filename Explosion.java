@@ -40,11 +40,8 @@ class Explosion {
 		return new FromFileImage( pin, "images/explosion.png" );
 	}
 
-	public Explosion  explosionTimeInc( ) {
-		if ( timer < 5 ) {
-			this.timer++;
-			return this;
-		} else {  return null; }
+	public Explosion explosionTimeInc( ) {
+		return new Explosion( timer + 1, pin );
 	}
 
 
