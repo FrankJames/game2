@@ -49,6 +49,7 @@ class Menu extends World {
 	LinkedList<Enemies> enemyList;
 	int firePower;
 	int bombNum;
+	int health;
 	int arrow;
 	int spending;
 
@@ -72,7 +73,7 @@ class Menu extends World {
 	public Menu( Hero hero,
 				 LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList,
 				 LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList,
-				 int firePower, int bombNum, int arrow, int spending ) {
+				 int firePower, int bombNum, int health, int arrow, int spending ) {
 		this.width = 1000;
 		this.height = 650;
 		this.hero = hero;
@@ -82,6 +83,7 @@ class Menu extends World {
 		this.enemyList = enemyList;
 		this.firePower = firePower;
 		this.bombNum = bombNum;
+		this.health = health;
 		this.arrow = arrow;
 		this.spending = spending;
 	}
@@ -89,7 +91,7 @@ class Menu extends World {
 	public Menu( Hero hero,
 				 LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList,
 				 LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList,
-				 int firePower, int bombNum ) {
+				 int firePower, int bombNum, int health ) {
 		this.width = 1000;
 		this.height = 650;
 		this.hero = hero;
@@ -99,6 +101,7 @@ class Menu extends World {
 		this.enemyList = enemyList;
 		this.firePower = firePower;
 		this.bombNum = bombNum;
+		this.health = health;
 		this.arrow = 0;
 		this.spending = 0;
 	}
@@ -108,42 +111,42 @@ class Menu extends World {
 		// move mouse cursor up
 		if( ke.equals("up") && ( arrow == 1 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower, bombNum, 0, spending );
+				enemyList, firePower, bombNum, health, 0, spending );
 		} 
 
 		// move arrow down
 		else if ( ke.equals("down") && ( arrow == 0)) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower, bombNum, 1, spending );
+				enemyList, firePower, bombNum, health, 1, spending );
 		}
 
 		// increase fire power
 		else if ( ke.equals("right") && ( arrow == 0 ) && ( spending > 0 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower + 1, bombNum, arrow, spending - 1 );
+				enemyList, firePower + 1, bombNum, health, arrow, spending - 1 );
 		}
 
 		// decrease fire power
 		else if ( ke.equals("left") && ( arrow == 0 ) && ( firePower > 1 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower - 1, bombNum, arrow, spending + 1 );
+				enemyList, firePower - 1, bombNum, health, arrow, spending + 1 );
 		}
 
 		// increase bomb number
 		else if ( ke.equals("right") && ( arrow == 1 ) && ( spending > 0 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower, bombNum + 1, arrow, spending - 1 );
+				enemyList, firePower, bombNum + 1, health, arrow, spending - 1 );
 		}
 
 		// increase bomb number
 		else if ( ke.equals("left") && ( arrow == 1 ) && ( bombNum > 0 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
-				enemyList, firePower, bombNum - 1, arrow, spending + 1 );
+				enemyList, firePower, bombNum - 1, health, arrow, spending + 1 );
 		}
 
 		else if ( ke.equals("x") ) {
 			return new OverWorld( hero, bombList, explosionList, rockList, 
-				enemyList, firePower, bombNum );
+				enemyList, firePower, bombNum, health );
 		}
 
 		else {

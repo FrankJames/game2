@@ -41,10 +41,12 @@ class OverWorld extends World {
 	LinkedList<Enemies> enemyList;
 	int firePower;
 	int bombNum;
+	int health;
 
 	public OverWorld(int width, int height, Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, int firePower, int bombNum ) {
+		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, 
+		int firePower, int bombNum, int health ) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
@@ -54,11 +56,13 @@ class OverWorld extends World {
 		this.enemyList = enemyList;
 		this.firePower = firePower;
 		this.bombNum = bombNum;
+		this.health = health;
 	}
 
 	public OverWorld( Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, int firePower, int bombNum ) {
+		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, 
+		int firePower, int bombNum, int health ) {
 		this.width = width;
 		this.height = height;
 		this.hero = hero;
@@ -68,6 +72,7 @@ class OverWorld extends World {
 		this.enemyList = enemyList;
 		this.firePower = firePower;
 		this.bombNum = bombNum;
+		this.health = health;
 	}
 
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
@@ -81,6 +86,7 @@ class OverWorld extends World {
 		this.enemyList = enemyList;
 		this.firePower = 2;
 		this.bombNum = 3;
+		this.health = 3;
 	}
 
 	public World onKeyEvent( String ke ) {
@@ -156,27 +162,27 @@ class OverWorld extends World {
 
 			if ( canMove ) {
 				return new OverWorld( hero.heroMove( ke ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else if ( canMoveHalf )  {
 				return new OverWorld( hero.heroMove( ke, 2 ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else if ( canMoveQuarter ) {
 				return new OverWorld( hero.heroMove( ke, 4 ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else if ( canMoveEigth ) {
 				return new OverWorld( hero.heroMove( ke, 8 ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else if ( canMoveSixteenth ) {
 				return new OverWorld( hero.heroMove( ke, 16 ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else if ( canMoveThirtySecond ) {
 				return new OverWorld( hero.heroMove( ke, 32 ), bombList, explosionList, 
-										rockList, enemyList, firePower, bombNum );
+										rockList, enemyList, firePower, bombNum, health );
 
 			} else {
 				return this;
@@ -184,11 +190,13 @@ class OverWorld extends World {
 
 		} else if ( ke.equals("z")  && ( bombList.size( ) < bombNum ) ) {
 			bombList.add( new Bomb( hero.pin ) );
-			return new OverWorld( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
+			return new OverWorld( hero, bombList, explosionList, rockList, enemyList, 
+									firePower, bombNum, health );
 		}
 
 		else if ( ke.equals("x") ) {
-			return new Menu( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
+			return new Menu( hero, bombList, explosionList, rockList, enemyList, 
+									firePower, bombNum, health );
 		}
 		
 		else {
@@ -315,7 +323,8 @@ class OverWorld extends World {
 
 			k = rockList.listIterator( 0 );
 
-			if ( eNext.checkHitHero( hero ) ){
+			if ( eNext.checkHitHero( hero ) ) {
+				health -= 1;
 				enemyCanMove = false;
 			}
 
@@ -334,7 +343,8 @@ class OverWorld extends World {
 			j.next( ).explosionTimeInc( );
 		}
 
-		return new OverWorld( hero, nextBombList, explosionList, nextRockList, nextEnemyList, firePower, bombNum );
+		return new OverWorld( hero, nextBombList, explosionList, nextRockList, nextEnemyList, 
+			firePower, bombNum, health );
 	}
 
 
@@ -364,9 +374,26 @@ class OverWorld extends World {
 			world = new OverlayImages( world, l.next( ).enemyView( ) );
 		}
 
-		world = new OverlayImages(world, hero.heroView( ) );	 
+		world = new OverlayImages( world, new TextImage( 
+												new Posn( 950, 20 ),
+												"Health: " + health, 20,
+												new Black( ) ) );
+
+		world = new OverlayImages( world, hero.heroView( ) );	 
 
 		return world;
+	}
+
+	public WorldEnd worldEnds( ) {
+		if( health < 1) {
+			return new WorldEnd( true, 
+							new TextImage(
+								new Posn( 500, 325 ),
+								"GAME OVER", 50, new Black( ) ) );
+		}
+
+		else
+			return new WorldEnd( false, this.makeImage( ) );
 	}
 
 
