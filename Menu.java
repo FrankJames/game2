@@ -141,7 +141,7 @@ class Menu extends World {
 				enemyList, firePower, bombNum - 1, arrow, spending + 1 );
 		}
 
-		else if ( ke.equals("b") ) {
+		else if ( ke.equals("x") ) {
 			return new OverWorld( hero, bombList, explosionList, rockList, 
 				enemyList, firePower, bombNum );
 		}

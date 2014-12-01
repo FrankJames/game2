@@ -159,7 +159,7 @@ class OverWorld extends World {
 			return new OverWorld( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
 		}
 
-		else if ( ke.equals("b") ) {
+		else if ( ke.equals("x") ) {
 			return new Menu( hero, bombList, explosionList, rockList, enemyList, firePower, bombNum );
 		}
 		
@@ -169,6 +169,11 @@ class OverWorld extends World {
 	}
 
 	public World onTick( ) {
+
+
+		LinkedList<Enemies> partEnemyList = new LinkedList( );
+		LinkedList<Enemies> nextEnemyList = new LinkedList( );
+		Iterator<Enemies> l = enemyList.listIterator( 0 );
 
 		// check if each bomb should be removed from the bombList and added to explosionList
 		if( ( bombList.size( ) > 0 ) && ( bombList.element( ).checkGoBoom( ) ) ) {
@@ -240,8 +245,7 @@ class OverWorld extends World {
 			j = explosionList.listIterator( 0 );
 		}
 
-		LinkedList<Enemies> nextEnemyList = new LinkedList( );
-		Iterator<Enemies> l = enemyList.listIterator( 0 );
+
 		k = rockList.listIterator( 0 );
 
 
@@ -260,15 +264,33 @@ class OverWorld extends World {
 				if ( eNext.checkRock( checkAgainstRock ) ) {
 					enemyCanMove = false;
 					}
-			}
+				}
+
 			k = rockList.listIterator( 0 );
 
 			if( enemyCanMove ) {
-				nextEnemyList.add( eNext ); 
-			} else {
-				nextEnemyList.add( e.enemyChangeDirection( ) );
+					partEnemyList.add( eNext ); 
+				} else {
+					partEnemyList.add( e.enemyChangeDirection( ) );
+				}
+		}
+
+		Iterator<Enemies> m = partEnemyList.listIterator( 0 );
+
+		while( m.hasNext( ) ) {
+			Enemies nextEnemy = m.next( );
+
+			nextEnemyList.add( nextEnemy );
+
+			while( j.hasNext( ) ) {
+				Explosion explo = j.next( );
+
+				if( nextEnemy.checkExplosion( explo ) ) {
+					nextEnemyList.remove( nextEnemy );
+				}
 			}
 
+			j = explosionList.listIterator( 0 );
 		}
 
 		// increase each explosion's timer
@@ -332,7 +354,7 @@ class OverWorld extends World {
 		while( y < 625 ) {
 			levelOne.add( new NDRock( new Posn( 25, y ) ) );
 
-			if( ( y < 500 ) && ( y > 300 ) ) 
+			if( ( y < 500 ) && ( y > 250 ) ) 
 				levelOne.add( new DRock( new Posn( 975, y ) ) );
 			 else 
 				levelOne.add( new NDRock( new Posn( 975, y ) ) );
@@ -342,10 +364,18 @@ class OverWorld extends World {
 
 		levelOne.add( new DRock( new Posn( 500, 100 ) ) );
 		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
-		levelOne.add( new DRock( new Posn( 600, 300) ) ) ;
+		levelOne.add( new DRock( new Posn( 600, 300 ) ) );
+
+		x = 825; y = 100;
+		while( y < 600 ) {
+			levelOne.add( new DRock( new Posn( x, y ) ) );
+			y+= 50;
+		}
+
 
 		LinkedList scaryList = new LinkedList( );
 		scaryList.add( new Baddy( new Posn( 350, 250 ), 0 ) );
+		scaryList.add( new Baddy( new Posn( 100, 375 ), 1 ) );
 
 
 

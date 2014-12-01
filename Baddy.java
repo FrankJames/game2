@@ -84,7 +84,21 @@ class Baddy implements Enemies {
 		return image;
 	}
  	public boolean checkExplosion( Explosion e ) {
- 		return false;
+ 		 int a1 = this.pin.x;
+		int a2 = e.getPin( ).x;
+		int b1 = this.pin.y;
+		int b2 = e.getPin( ).y;
+
+		int halfBaddyWidth = this.width / 2;
+		int halfExpWidth = e.getWidth( ) / 2;
+		int halfBaddyHeight = this.height / 2;
+		int halfExpHeight = e.getHeight( ) / 2;
+
+ 		if ( ( Math.abs(a1 - a2) < ( halfExpWidth + halfBaddyWidth ) )
+			&& ( Math.abs(b1 - b2) < ( halfExpHeight + halfBaddyHeight ) ) )
+ 			return true;
+ 		else
+ 			return false;
  	}
 
 }
