@@ -10,27 +10,10 @@ import java.util.*;
 	NOTES FOR GAME2:
 	working title: Hero Dude who has some bombs hidden up his sleeve or in his back pocket or something
 
-
-The game itself will have:
-	1. the hero
-	2. list of bombs currently in play
-	3. list of enemies
-	4. list of current explosions
-	5. rocks that are destroyable and may contain upgrades (more bombs in play, larger explosions, more life points)
-	6. non-destroyable background
-
-	On tick will need to:
-		1. checkGoBoom for each bomb
-		2. checkHitHero for each enemy
-		3. checkExplosion for hero/enemies/obstacles
-
 Other notes:
 	Potentially a boss dragon with randomized movement
-
-The world needs to have different states:
-obviously there will be different rooms, but what about an inventory? or a title screen?
-powerups could definitely be fields in the OverWorld, not in the Hero class
  */ 
+
 class OverWorld extends World {
 	int width;
 	int height;
@@ -210,7 +193,7 @@ class OverWorld extends World {
 
 	public World onTick( ) {
 
-
+		Hero nextHero = hero;
 		LinkedList<Enemies> partEnemyList = new LinkedList( );
 		LinkedList<Enemies> nextEnemyList = new LinkedList( );
 		Iterator<Enemies> l = enemyList.listIterator( 0 );
@@ -330,9 +313,10 @@ class OverWorld extends World {
 
 			k = rockList.listIterator( 0 );
 
-			if ( eNext.checkHitHero( hero ) ) {
+			if ( eNext.checkHitHero( hero ) && hero.canBeHit ) {
 				health -= 1;
 				enemyCanMove = false;
+				hero.canBeHit = false;
 			}
 
 			if( enemyCanMove ) {
@@ -348,12 +332,21 @@ class OverWorld extends World {
 			Explosion expNext = j.next( ).explosionTimeInc( );
 			nextExplosionList.add( expNext );
 
-			if( hero.checkExplosion( expNext ) ) {
+			if( hero.checkExplosion( expNext ) && hero.canBeHit ) {
 				health -= 1;
+				hero.canBeHit = false;
 			}
 		}
 
-		return new OverWorld( hero, nextBombList, nextExplosionList, nextRockList, nextEnemyList, 
+		
+
+		// if the hero is invulnerable, then we go through the 
+		// invulnerability timer and then reset at the end. 
+		if( hero.canBeHit == false ) {
+			nextHero = hero.heroTimerInc( );
+		}
+
+		return new OverWorld( nextHero, nextBombList, nextExplosionList, nextRockList, nextEnemyList, 
 							firePower, bombNum, health, spending );
 	}
 
@@ -376,11 +369,11 @@ class OverWorld extends World {
 			world = new OverlayImages( world, j.next( ).explosionView( ) );
 		}
 
-		while (k.hasNext( ) ) {
+		while ( k.hasNext( ) ) {
 			world = new OverlayImages( world, k.next( ).rockView( ) );
 		}
 
-		while (l.hasNext( ) ) {
+		while ( l.hasNext( ) ) {
 			world = new OverlayImages( world, l.next( ).enemyView( ) );
 		}
 
@@ -390,7 +383,7 @@ class OverWorld extends World {
 												new Black( ) ) );
 
 		world = new OverlayImages( world, new TextImage( 
-												new Posn( 850, 20 ),
+												new Posn( 800, 20 ),
 												"Spending: " + spending, 20,
 												new Black( ) ) );
 
@@ -415,7 +408,7 @@ class OverWorld extends World {
 
 	public static void main(String[ ] args ) {
 
-		Hero man = new Hero( new Posn( 100, 150 ), 3);
+		Hero man = new Hero( new Posn( 100, 150 ) );
 		LinkedList<Rocks> levelOne = new LinkedList( );
 
 		int x = 25;
@@ -444,16 +437,30 @@ class OverWorld extends World {
 		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
 		levelOne.add( new DRock( new Posn( 600, 300 ) ) );
 
+		// vertical destructable rocks
 		x = 825; y = 100;
 		while( y < 600 ) {
 			levelOne.add( new DRock( new Posn( x, y ) ) );
 			y+= 50;
 		}
 
+		// matrix of non-destructable rocks
+		x = 400; y = 300;
+		while( y < 450 ) {
+			while( x < 550 ) {
+				levelOne.add( new NDRock( new Posn( x, y ) ) );
+				x+= 50;
+			}
+			y+= 50;
+			x = 400;
+		}
 
-		LinkedList scaryList = new LinkedList( );
+
+		LinkedList<Enemies> scaryList = new LinkedList( );
 		scaryList.add( new Baddy( new Posn( 350, 250 ), 0 ) );
 		scaryList.add( new Baddy( new Posn( 100, 375 ), 1 ) );
+		scaryList.add( new Baddy( new Posn( 500, 475 ), 3 ) );
+		scaryList.add( new Baddy( new Posn( 350, 150 ), 2 ) );
 
 
 

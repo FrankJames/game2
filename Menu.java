@@ -174,16 +174,16 @@ class Menu extends World {
 
 		WorldImage world = new RectangleImage( new Posn( 500, 325 ), 1000, 650, new Black( ) );
 
-		world = new OverlayImages( world, new RectangleImage( 
-											new Posn( 400, 200 + ( 100 * arrow ) ), 
-											100, 50, new White( ) ) );
+		world = new OverlayImages( world, new FromFileImage( 
+											new Posn( 350, 197 + ( 100 * arrow ) ), 
+											"images/arrow.png" ) );
 
-		world = new OverlayImages ( world, new TextImage( 
+		world = new OverlayImages( world, new TextImage( 
 											new Posn( 500, 200 ), 
 											"Fire Power: " + firePower, 12,
 											new White( ) ) );
 
-		world = new OverlayImages ( world, new TextImage( 
+		world = new OverlayImages( world, new TextImage( 
 											new Posn( 500, 300 ), 
 											"Bomb Number: " + bombNum, 12,
 											new White( ) ) );
@@ -191,6 +191,11 @@ class Menu extends World {
 		world = new OverlayImages ( world, new TextImage( 
 											new Posn( 500, 400 ), 
 											"Health: " + health, 12,
+											new White( ) ) );
+
+		world = new OverlayImages( world, new TextImage(
+											new Posn( 500, 500 ),
+											"Press X to exit! Press any other key to exist!", 12,
 											new White( ) ) );
 
 		return world;
