@@ -142,27 +142,27 @@ class Menu extends World {
 		WorldImage world = new RectangleImage( new Posn( 500, 325 ), 1000, 650, new Black( ) );
 
 		world = new OverlayImages( world, new FromFileImage( 
-											new Posn( 350, 197 + ( 100 * arrow ) ), 
+											new Posn( 300, 197 + ( 100 * arrow ) ), 
 											"images/arrow.png" ) );
 
 		world = new OverlayImages( world, new TextImage( 
 											new Posn( 500, 200 ), 
-											"Fire Power: " + firePower, 12,
+											"Fire Power: " + firePower, 30,
 											new White( ) ) );
 
 		world = new OverlayImages( world, new TextImage( 
 											new Posn( 500, 300 ), 
-											"Bomb Number: " + bombNum, 12,
+											"Bomb Number: " + bombNum, 30,
 											new White( ) ) );
 
 		world = new OverlayImages ( world, new TextImage( 
 											new Posn( 500, 400 ), 
-											"Health: " + health, 12,
+											"Health: " + health, 30,
 											new White( ) ) );
 
 		world = new OverlayImages( world, new TextImage(
 											new Posn( 500, 500 ),
-											"Press X to exit! Press any other key to exist!", 12,
+											"Press X to exit!", 12,
 											new White( ) ) );
 
 		return world;

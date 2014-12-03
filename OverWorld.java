@@ -197,8 +197,8 @@ class OverWorld extends World {
 		LinkedList<Enemies> partEnemyList = new LinkedList( );
 		LinkedList<Enemies> nextEnemyList = new LinkedList( );
 		Iterator<Enemies> l = enemyList.listIterator( 0 );
-
 		LinkedList<Explosion> nextExplosionList = new LinkedList( );
+		boolean removedEnemy = false;
 
 		// check if each bomb should be removed from the bombList and added to explosionList
 		if( ( bombList.size( ) > 0 ) && ( bombList.element( ).checkGoBoom( ) ) ) {
@@ -270,8 +270,6 @@ class OverWorld extends World {
 			j = explosionList.listIterator( 0 );
 		}
 
-
-
 		// iterate through the list and check if we need to remove them
 		// because of a collision with an explosion
 		while( l.hasNext( ) ) {
@@ -284,7 +282,7 @@ class OverWorld extends World {
 
 				if( nextEnemy.checkExplosion( explo ) ) {
 					partEnemyList.remove( nextEnemy );
-					spending++; // sometimes messes up?
+					removedEnemy = true; 
 				}
 			}
 
@@ -344,12 +342,25 @@ class OverWorld extends World {
 			}
 		}
 
-		
-
 		// if the hero is invulnerable, then we go through the 
 		// invulnerability timer and then reset at the end. 
 		if( hero.canBeHit == false ) {
 			nextHero = hero.heroTimerInc( );
+		}
+
+		// if we removed an enemy, increase our spending amount!
+		if( removedEnemy ) {
+			spending++;
+		}
+
+		if( hero.getPin( ).x > 1000 ) {
+			return new TitleScreen( 2, firePower, bombNum, health, spending );
+		}
+		else if( hero.getPin( ).y > 650 ) {
+			return new TitleScreen( 3, firePower, bombNum, health, spending );
+		}
+		else if( hero.getPin( ).x < 0 ) {
+			return new TitleScreen( 4, firePower, bombNum, health, spending );
 		}
 
 		return new OverWorld( nextHero, nextBombList, nextExplosionList, nextRockList, nextEnemyList, 
@@ -408,70 +419,5 @@ class OverWorld extends World {
 
 		else
 			return new WorldEnd( false, this.makeImage( ) );
-	}
-
-
-
-	public static void main(String[ ] args ) {
-
-		Hero man = new Hero( new Posn( 100, 150 ) );
-		LinkedList<Rocks> levelOne = new LinkedList( );
-
-		int x = 25;
-		int y = 75;
-
-		// horizontal borders
-		while( x < 1000 ) {
-			levelOne.add( new NDRock( new Posn( x, 50 ) ) );
-			levelOne.add( new NDRock( new Posn( x, 625 ) ) );
-			x+= 50;
-		}
-
-		// vertical borders and the exit!
-		while( y < 625 ) {
-			levelOne.add( new NDRock( new Posn( 25, y ) ) );
-
-			if( ( y < 500 ) && ( y > 250 ) ) 
-				levelOne.add( new DRock( new Posn( 975, y ) ) );
-			 else 
-				levelOne.add( new NDRock( new Posn( 975, y ) ) );
-			
-			y+= 25;
-		}
-
-		levelOne.add( new DRock( new Posn( 500, 100 ) ) );
-		levelOne.add( new DRock( new Posn( 250, 400 ) ) );
-		levelOne.add( new DRock( new Posn( 600, 300 ) ) );
-
-		// vertical destructable rocks
-		x = 825; y = 100;
-		while( y < 600 ) {
-			levelOne.add( new DRock( new Posn( x, y ) ) );
-			y+= 50;
-		}
-
-		// matrix of non-destructable rocks
-		x = 400; y = 300;
-		while( y < 450 ) {
-			while( x < 550 ) {
-				levelOne.add( new NDRock( new Posn( x, y ) ) );
-				x+= 50;
-			}
-			y+= 50;
-			x = 400;
-		}
-
-
-		LinkedList<Enemies> scaryList = new LinkedList( );
-		scaryList.add( new Baddy( new Posn( 350, 250 ), 0 ) );
-		scaryList.add( new Baddy( new Posn( 100, 375 ), 1 ) );
-		scaryList.add( new Baddy( new Posn( 500, 475 ), 3 ) );
-		scaryList.add( new Baddy( new Posn( 350, 150 ), 2 ) );
-
-
-
-		OverWorld w = new OverWorld( man, new LinkedList( ), new LinkedList( ), levelOne, scaryList );
-
-		w.bigBang( 1000, 650, 0.1);
 	}
 } 
