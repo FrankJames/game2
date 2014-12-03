@@ -5,39 +5,6 @@ import javalib.colors.*;
 import java.io.*;
 import java.util.*;
 
-/* menu class:
-
-Needs to keep track of:
-	1. the list of enemies
-	2. the list of rocks
-	3. the list of bombs
-	4. the list of explosions
-	5. the hero / his position
-
-needs to be able to manipulate:
-	1. unused points
-	2. how many bombs allowed on screen
-	3. firepower
-
-extends world:
-
-
-onKeyEvent
-	up/down: 		change arrow cursor
-	left/right:		change upgrade / unused points counters
-	b: 				exit menu, back to OverWorld
-
-onTick
-	do nothing?
-
-makeImage
-	black rectangle of the same size as OverWorld
-	text images
-
-
-The cursor arrow will be represented as a number. Arrow can either be 0 or 1.
-
-*/
 
 class Menu extends World {
 	int width;

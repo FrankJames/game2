@@ -313,10 +313,16 @@ class OverWorld extends World {
 
 			k = rockList.listIterator( 0 );
 
-			if ( eNext.checkHitHero( hero ) && hero.canBeHit ) {
-				health -= 1;
+			// check if the enemy will hit the hero, 
+			// if the hero can be hit, then lose health
+			// enemies always change direction in this case
+			if ( eNext.checkHitHero( hero ) ) {
+				if ( hero.canBeHit ) {
+					health -= 1;
+					hero.canBeHit = false;
+				}
+
 				enemyCanMove = false;
-				hero.canBeHit = false;
 			}
 
 			if( enemyCanMove ) {
