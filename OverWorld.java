@@ -363,6 +363,10 @@ class OverWorld extends World {
 			return new TitleScreen( 4, firePower, bombNum, health, spending );
 		}
 
+		if( health < 1 ) {
+			return new TitleScreen( 5 );
+		}
+
 		return new OverWorld( nextHero, nextBombList, nextExplosionList, nextRockList, nextEnemyList, 
 							firePower, bombNum, health, spending );
 	}
@@ -407,17 +411,5 @@ class OverWorld extends World {
 		world = new OverlayImages( world, hero.heroView( ) );	 
 
 		return world;
-	}
-
-	public WorldEnd worldEnds( ) {
-		if( health < 1) {
-			return new WorldEnd( true, 
-							new TextImage(
-								new Posn( 500, 325 ),
-								"GAME OVER", 50, new Black( ) ) );
-		}
-
-		else
-			return new WorldEnd( false, this.makeImage( ) );
 	}
 } 

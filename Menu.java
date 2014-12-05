@@ -118,7 +118,7 @@ class Menu extends World {
 		}
 
 		// decrease health
-		else if ( ke.equals("left") && ( arrow == 2 ) && ( health > 0 ) ) {
+		else if ( ke.equals("left") && ( arrow == 2 ) && ( health > 1 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
 				enemyList, firePower, bombNum, health - 1, arrow, spending + 1 );
 		}
