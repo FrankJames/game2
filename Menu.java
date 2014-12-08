@@ -7,8 +7,6 @@ import java.util.*;
 
 
 class Menu extends World {
-	int width;
-	int height;
 	Hero hero;
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
@@ -20,29 +18,10 @@ class Menu extends World {
 	int arrow;
 	int spending;
 
-	public Menu( int width, int height, Hero hero,
-				 LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList,
-				 LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList,
-				 int firePower, int bombNum, int arrow, int spending ) {
-		this.width = width;
-		this.height = height;
-		this.hero = hero;
-		this.bombList = bombList;
-		this.explosionList = explosionList;
-		this.rockList = rockList;
-		this.enemyList = enemyList;
-		this.firePower = firePower;
-		this.bombNum = bombNum;
-		this.arrow = arrow;
-		this.spending = spending;
-	}
-
 	public Menu( Hero hero,
 				 LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList,
 				 LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList,
 				 int firePower, int bombNum, int health, int arrow, int spending ) {
-		this.width = 1000;
-		this.height = 650;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
@@ -59,8 +38,6 @@ class Menu extends World {
 				 LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList,
 				 LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList,
 				 int firePower, int bombNum, int health, int spending ) {
-		this.width = 1000;
-		this.height = 650;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
@@ -94,7 +71,7 @@ class Menu extends World {
 		}
 
 		// decrease fire power
-		else if ( ke.equals("left") && ( arrow == 0 ) && ( firePower > 1 ) ) {
+		else if ( ke.equals("left") && ( arrow == 0 ) && ( firePower > 0 ) ) {
 			return new Menu ( hero, bombList, explosionList, rockList, 
 				enemyList, firePower - 1, bombNum, health, arrow, spending + 1 );
 		}
@@ -144,6 +121,11 @@ class Menu extends World {
 		world = new OverlayImages( world, new FromFileImage( 
 											new Posn( 300, 197 + ( 100 * arrow ) ), 
 											"images/arrow.png" ) );
+
+		world = new OverlayImages( world, new TextImage(
+											new Posn( 500, 100 ),
+											"Points to spend: " + spending, 30,
+											new White( ) ) );
 
 		world = new OverlayImages( world, new TextImage( 
 											new Posn( 500, 200 ), 

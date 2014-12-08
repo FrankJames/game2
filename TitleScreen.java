@@ -408,5 +408,4 @@ class TitleScreen extends World {
 		TitleScreen t = new TitleScreen( 0 );
 		t.bigBang( 1000, 650, 0.1);
 	}
-
 }

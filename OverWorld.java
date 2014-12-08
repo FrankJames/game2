@@ -15,8 +15,6 @@ Other notes:
  */ 
 
 class OverWorld extends World {
-	int width;
-	int height;
 	Hero hero;
 	LinkedList<Bomb> bombList;
 	LinkedList<Explosion> explosionList;
@@ -27,29 +25,11 @@ class OverWorld extends World {
 	int health;
 	int spending;
 
-	public OverWorld(int width, int height, Hero hero, 
-		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
-		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, 
-		int firePower, int bombNum, int health, int spending ) {
-		this.width = width;
-		this.height = height;
-		this.hero = hero;
-		this.bombList = bombList;
-		this.explosionList = explosionList;
-		this.rockList = rockList;
-		this.enemyList = enemyList;
-		this.firePower = firePower;
-		this.bombNum = bombNum;
-		this.health = health;
-		this.spending = spending;
-	}
 
 	public OverWorld( Hero hero, 
 		LinkedList<Bomb> bombList, LinkedList<Explosion> explosionList ,
 		LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList, 
 		int firePower, int bombNum, int health, int spending ) {
-		this.width = width;
-		this.height = height;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
@@ -63,8 +43,6 @@ class OverWorld extends World {
 
 	public OverWorld( Hero hero, LinkedList<Bomb> bombList, 
 		LinkedList<Explosion> explosionList, LinkedList<Rocks> rockList, LinkedList<Enemies> enemyList ) {
-		this.width = 1000;
-		this.height = 650;
 		this.hero = hero;
 		this.bombList = bombList;
 		this.explosionList = explosionList;
