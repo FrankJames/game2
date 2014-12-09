@@ -198,7 +198,7 @@ class OverWorld extends World {
 		}	
 		
 		// remove explosions that have been sticking around for too long
-		while( ( explosionList.size( ) > 0 ) && (explosionList.element( ).timer >= 5 ) ) {
+		while( ( explosionList.size( ) > 0 ) && ( explosionList.element( ).timer >= 5 ) ) {
 			explosionList.removeFirst( );
 			}
 
