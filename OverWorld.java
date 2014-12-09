@@ -377,13 +377,23 @@ class OverWorld extends World {
 		}
 
 		world = new OverlayImages( world, new TextImage( 
-												new Posn( 950, 20 ),
-												"Health: " + health, 20,
+												new Posn( 910, 20 ),
+												"Spending: " + spending, 20,
 												new Black( ) ) );
 
 		world = new OverlayImages( world, new TextImage( 
-												new Posn( 800, 20 ),
-												"Spending: " + spending, 20,
+												new Posn( 775, 20 ),
+												"Max Bombs: " + bombNum, 20,
+												new Black( ) ) );
+
+		world = new OverlayImages( world, new TextImage( 
+												new Posn( 625, 20 ),
+												"Fire Power: " + firePower, 20,
+												new Black( ) ) );
+
+		world = new OverlayImages( world, new TextImage( 
+												new Posn( 500, 20 ),
+												"Health: " + health, 20,
 												new Black( ) ) );
 
 		world = new OverlayImages( world, hero.heroView( ) );	 
