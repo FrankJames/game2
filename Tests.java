@@ -484,7 +484,7 @@ class Tests {
 	
 	public static void main(String[] args) {
 		
-		Tester.runReport( new Tests( ), false, false );
+		Tester.runReport( new Tests( ), true, false );
 
 	}
 }

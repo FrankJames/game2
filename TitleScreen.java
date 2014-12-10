@@ -401,8 +401,7 @@ class TitleScreen extends World {
 
 		return world;
 	}
-
-
+	
 	public static void main(String[] args) {
 
 		TitleScreen t = new TitleScreen( 0 );
